@@ -1,2 +1,0 @@
-diskcache==5.4.0
-farm-haystack==1.1.0
