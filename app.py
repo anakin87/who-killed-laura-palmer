@@ -21,7 +21,7 @@ from annotated_text import annotation
 import shutil
 
 # FAISS index directory
-INDEX_DIR = './index'
+INDEX_DIR = './data/index'
 
 
 # the following function is cached to make index and models load only at start
@@ -30,8 +30,9 @@ def start_haystack():
   """
   load document store, retriever, reader and create pipeline
   """
-  shutil.copy(f'{INDEX_DIR}/faiss_document_store.db','.')
+  #shutil.copy(f'{INDEX_DIR}/faiss_document_store.db','.')
   document_store = FAISSDocumentStore(
+      sql_url=f'sqlite:///{INDEX_DIR}/faiss_document_store.db'
       faiss_index_path=f'{INDEX_DIR}/my_faiss_index.faiss',
       faiss_config_path=f'{INDEX_DIR}/my_faiss_index.json')
   print (f'Index size: {document_store.get_document_count()}')  
