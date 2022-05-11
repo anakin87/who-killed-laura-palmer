@@ -1,6 +1,6 @@
 ---
 title: Who killed Laura Palmer?
-emoji: 🕵🏻
+emoji: 🗻🗻🏻
 colorFrom: gray
 colorTo: red
 sdk: streamlit
