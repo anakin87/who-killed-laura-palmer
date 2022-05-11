@@ -1,0 +1,33 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s - %(levelname)s - %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: standard
+    level: INFO
+    stream: ext://sys.stdout
+
+  file:
+    class: logging.handlers.RotatingFileHandler
+    formatter: standard
+    filename: ./logs/wklp.log
+    level: INFO
+    maxBytes: 10485760 # 10Mb
+    backupCount: 3
+
+
+loggers:
+  uvicorn:
+    error:
+      propagate: true
+  
+
+root:
+  level: INFO
+  handlers: [console, file]
+  propagate: no
