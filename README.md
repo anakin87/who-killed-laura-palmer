@@ -1,8 +1,8 @@
 ---
 title: Who killed Laura Palmer?
 emoji: 🗻🗻
-colorFrom: gray
-colorTo: red
+colorFrom: blue
+colorTo: green
 sdk: streamlit
 sdk_version: 1.2.0
 app_file: app.py
