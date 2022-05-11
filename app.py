@@ -65,10 +65,12 @@ def query(pipe, question):
 
 def main():
     pipe=start_haystack()
-    my_ip=subprocess.run(['curl', 'ifconfig.me'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+    # my_ip=subprocess.run(['curl', 'ifconfig.me'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+
+    st.set_page_config(page_title='Who killed Laura Palmer?', page_icon="https://haystack.deepset.ai/img/HaystackIcon.png")
 
     # Persistent state
-    set_state_if_absent('question', "")
+    set_state_if_absent('question', "Where is Twin Peaks?")
     set_state_if_absent('answer', '')
     set_state_if_absent('results', None)
     set_state_if_absent('raw_json', None)
@@ -81,10 +83,12 @@ def main():
         st.session_state.raw_json = None
 
     # Title
-    st.write("# Question answering engine")
+    # Title
+    st.write("# Who killed Laura Palmer?")
+    st.write("### The first Twin Peaks Question Answering system!")
     
     st.markdown("""<br/>
-Ask any question and see if the system can find the correct answer to your query!
+Ask any question on Twin Peaks and see if the systsem can find the correct answer to your query!
 
 *Note: do not use keywords, but full-fledged questions.*
 """, unsafe_allow_html=True)
