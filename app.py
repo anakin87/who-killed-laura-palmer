@@ -21,7 +21,7 @@ from annotated_text import annotation
 import shutil
 
 # FAISS index directory
-INDEX_DIR = './data/index'
+INDEX_DIR = 'data/index'
 
 
 # the following function is cached to make index and models load only at start
