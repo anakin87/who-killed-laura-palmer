@@ -64,8 +64,8 @@ def query(pipe, question):
     return (pipe.run(question, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}}), None)
 
 def main():
-    st.set_page_config(page_title='Who killed Laura Palmer?',
-    page_icon="https://static.wikia.nocookie.net/twinpeaks/images/4/4a/Site-favicon.ico/revision/latest?cb=20210710003705")
+    # st.set_page_config(page_title='Who killed Laura Palmer?',
+    # page_icon="https://static.wikia.nocookie.net/twinpeaks/images/4/4a/Site-favicon.ico/revision/latest?cb=20210710003705")
     
     pipe=start_haystack()
     # my_ip=subprocess.run(['curl', 'ifconfig.me'], stdout=subprocess.PIPE).stdout.decode('utf-8')
@@ -83,7 +83,7 @@ def main():
         st.session_state.results = None
         st.session_state.raw_json = None
 
-    # Title
+
     # Title
     st.write("# Who killed Laura Palmer?")
     st.write("### The first Twin Peaks Question Answering system!")
@@ -93,6 +93,46 @@ Ask any question on Twin Peaks and see if the systsem can find the correct answe
 
 *Note: do not use keywords, but full-fledged questions.*
 """, unsafe_allow_html=True)
+
+    # Sidebar
+    st.sidebar.header("Who killed Laura Palmer?")   
+    st.sidebar.image("https://upload.wikimedia.org/wikipedia/it/3/39/Twin-peaks-1990.jpg")
+    st.sidebar.markdown("#### Twin Peaks Question Answering system")
+    st.sidebar.markdown(f"""
+    <style>
+        a {{
+            text-decoration: none;
+        }}
+        .haystack-footer {{
+            text-align: center;
+        }}
+        .haystack-footer h4 {{
+            margin: 0.1rem;
+            padding:0;
+        }}
+        footer {{
+            opacity: 0;
+        }}
+        .haystack-footer img {{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 85%;
+        }}
+    </style>
+    <div class="haystack-footer">
+        <p>Get it on <a href="https://github.com/deepset-ai/haystack/">GitHub</a> &nbsp;&nbsp; - &nbsp;&nbsp;
+        Built with <a href="https://github.com/deepset-ai/haystack/">Haystack</a><br/>
+        <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki">Twin Peaks Wiki</a>.</small>       
+    </p>
+    <img src = 'https://static.wikia.nocookie.net/twinpeaks/images/e/ef/Laura_Palmer%2C_the_Queen_Of_Hearts.jpg'/>
+    <br/>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # st.sidebar.image('https://static.wikia.nocookie.net/twinpeaks/images/e/ef/Laura_Palmer%2C_the_Queen_Of_Hearts.jpg', width=270) #use_column_width='always'
+    song_i = random.randint(1,11)
+    st.sidebar.audio(f'http://twinpeaks.narod.ru/Media/0{song_i}.mp3')    
 
     # Search bar
     question = st.text_input("",
