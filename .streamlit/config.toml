@@ -1,4 +1,2 @@
 [theme]
-
-# The preset Streamlit theme that your custom theme inherits from. One of "light" or "dark".
-# base = "dark"
+base="dark"
