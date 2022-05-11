@@ -64,10 +64,11 @@ def query(pipe, question):
     return (pipe.run(question, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}}), None)
 
 def main():
+    st.set_page_config(page_title='Who killed Laura Palmer?',
+    page_icon="https://static.wikia.nocookie.net/twinpeaks/images/4/4a/Site-favicon.ico/revision/latest?cb=20210710003705")
+    
     pipe=start_haystack()
     # my_ip=subprocess.run(['curl', 'ifconfig.me'], stdout=subprocess.PIPE).stdout.decode('utf-8')
-
-    st.set_page_config(page_title='Who killed Laura Palmer?', page_icon="https://haystack.deepset.ai/img/HaystackIcon.png")
 
     # Persistent state
     set_state_if_absent('question', "Where is Twin Peaks?")
