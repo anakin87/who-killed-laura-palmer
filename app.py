@@ -16,8 +16,6 @@ from haystack.pipelines import ExtractiveQAPipeline
 from annotated_text import annotation
 import shutil
 from urllib.parse import unquote
-from diskcache import Cache
-
 
 
 # FAISS index directory
@@ -58,12 +56,7 @@ def set_state_if_absent(key, value):
         st.session_state[key] = value
 
 
-# start a disk cache (1Gb)
-cache = Cache('./cache', size_limit=1*2**30)
-
-# since our index is fixed and the following method is expensive,
-# we decide to cache it
-@cache.memoize()
+@st.cache(persist=True)
 def query(pipe, question, retriever_top_k=10, reader_top_k=5) -> dict:
     """Run query and get answers"""
     return (pipe.run(question, 
@@ -72,9 +65,7 @@ def query(pipe, question, retriever_top_k=10, reader_top_k=5) -> dict:
 
 
 def main():
-    # start a disk cache (1Gb)
-    cache = Cache('./cache', size_limit=1*2**30)
-    
+   
     pipe=start_haystack()
     questions = load_questions()
 
