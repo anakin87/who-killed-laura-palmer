@@ -6,7 +6,7 @@ import pandas as pd
 from json import JSONDecodeError
 from markdown import markdown
 import random
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 
 from haystack.document_stores import FAISSDocumentStore
 from haystack.nodes import EmbeddingRetriever
@@ -48,15 +48,15 @@ def query(pipe, question):
     """Run query and get answers"""
     return (pipe.run(question, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}}), None)
 
-def get_backlink(result) -> Tuple[str, str]:
+def get_backlink(result) -> Tuple[Optional[str], Optional[str]]:
     if result.get("document", None):
         doc = result["document"]
         if isinstance(doc, dict):
             if doc.get("meta", None):
                 if isinstance(doc["meta"], dict):
-                    if doc["meta"].get("url", None) :
-                        return doc["meta"]["url"]
-    return None    
+                    if doc["meta"].get("url", None) and doc["meta"].get("name", None):
+                        return doc["meta"]["url"], doc["meta"]["name"]
+    return None, None  
 
 def main():
     # st.set_page_config(page_title='Who killed Laura Palmer?',
@@ -203,14 +203,14 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
             end_idx = start_idx + len(answer)
             #url = get_backlink(result, my_ip)
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
-            st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#8ef")) + context[end_idx:]+"..."), unsafe_allow_html=True)
+            st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."), unsafe_allow_html=True)
             source = ""
-            url = get_backlink(result)
-            if url:
-                source = f"({result['document']['meta']['url']})"
+            url, title = get_backlink(result)
+            if url and title:
+                source = f"[{result['document']['meta']['title']}]({result['document']['meta']['url']})"
             else:
                 source = f"{result['source']}"
-            st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
+            st.markdown(f"**Score:** {result['relevance']} -  **Source:** {source}")
         else:
             st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 main()
