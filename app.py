@@ -16,6 +16,8 @@ from haystack.pipelines import ExtractiveQAPipeline
 from annotated_text import annotation
 import shutil
 from urllib.parse import unquote
+from diskcache import Cache
+
 
 
 # FAISS index directory
@@ -55,14 +57,22 @@ def set_state_if_absent(key, value):
     if key not in st.session_state:
         st.session_state[key] = value
 
-def query(pipe, question):
+
+# start a disk cache (1Gb)
+cache = Cache('./cache', size_limit=1*2**30)
+
+# since our index is fixed and the following method is expensive,
+# we decide to cache it
+@cache.memoize()
+def query(pipe, question, retriever_top_k=10, reader_top_k=5):
     """Run query and get answers"""
-    return (pipe.run(question, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}}), None)
+    return (pipe.run(question, 
+                params={"Retriever": {"top_k": retriever_top_k}, 
+                        "Reader": {"top_k": reader_top_k}}), None)
 
 
 def main():
-    # st.set_page_config(page_title='Who killed Laura Palmer?',
-    # page_icon="https://static.wikia.nocookie.net/twinpeaks/images/4/4a/Site-favicon.ico/revision/latest?cb=20210710003705")
+
     
     pipe=start_haystack()
     questions = load_questions()
