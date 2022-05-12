@@ -127,7 +127,7 @@ and see if the AI ​​can find an answer...
         }}
     </style>
     <div class="haystack-footer">
-        <p><a href="https://github.com/anakin87/who-killed-laura-palmer">GitHub</a> &nbsp;&nbsp; - &nbsp;&nbsp;
+        <p><a href="https://github.com/anakin87/who-killed-laura-palmer">GitHub</a> - 
         Built with <a href="https://github.com/deepset-ai/haystack/">Haystack</a><br/>
         <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki">Twin Peaks Wiki</a>.</small>       
     </p>
@@ -205,22 +205,20 @@ and see if the AI ​​can find an answer...
         for count, result in enumerate(st.session_state.results['answers']):
             result=result.to_dict()
             if result["answer"]:
-                if alert_irrelevance and result['score']<=0.40:
+                if alert_irrelevance and result['score']<0.50:
                     alert_irrelevance = False
-                    st.write("<h3 style='color: red'>Attention, the following answers have low relevance:</h3>", unsafe_allow_html=True)
+                    st.write("<h3 style='color: red'>Attention, the following answers have low score:</h3>", unsafe_allow_html=True)
 
             answer, context = result["answer"], result["context"]
-            #authors, title = result["meta"]["authors"], result["meta"]["title"]
             start_idx = context.find(answer)
             end_idx = start_idx + len(answer)
-            #url = get_backlink(result, my_ip)
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
             st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."), unsafe_allow_html=True)
             source = ""
-            name = result['meta']['name']
+            name = result['meta']['name'].replace('_',' ')
             url = result['meta']['url']
             source = f"[{name}]({url})"
             st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
-        else:
-            st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
+    else:
+        st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 main()
