@@ -89,7 +89,7 @@ def main():
     st.write("### The first Twin Peaks Question Answering system!")
     
     st.markdown("""<br/>
-Ask any question on Twin Peaks and see if the systsem can find the correct answer to your query!
+Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) and see if the AI can find answer...!
 
 *Note: do not use keywords, but full-fledged questions.*
 """, unsafe_allow_html=True)
@@ -97,7 +97,7 @@ Ask any question on Twin Peaks and see if the systsem can find the correct answe
     # Sidebar
     st.sidebar.header("Who killed Laura Palmer?")   
     st.sidebar.image("https://upload.wikimedia.org/wikipedia/it/3/39/Twin-peaks-1990.jpg")
-    st.sidebar.markdown("#### Twin Peaks Question Answering system")
+    st.sidebar.markdown("<p align="center">#### Twin Peaks Question Answering system</p>", unsafe_allow_html=True)
     st.sidebar.markdown(f"""
     <style>
         a {{
