@@ -63,7 +63,6 @@ def main():
     # page_icon="https://static.wikia.nocookie.net/twinpeaks/images/4/4a/Site-favicon.ico/revision/latest?cb=20210710003705")
     
     pipe=start_haystack()
-    # my_ip=subprocess.run(['curl', 'ifconfig.me'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 
     # Persistent state
     set_state_if_absent('question', "Where is Twin Peaks?")
@@ -96,11 +95,12 @@ def main():
     st.write("# Who killed Laura Palmer?")
     st.write("### The first Twin Peaks Question Answering system!")
     
-    st.markdown("""<br/>
-Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) and see if the AI can find answer...!
+    st.markdown("""
+Ask any question about Twin Peaks [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
+and see if the AI ​​can find an answer...
 
 *Note: do not use keywords, but full-fledged questions.*
-""", unsafe_allow_html=True)
+""")
 
     # Sidebar
     st.sidebar.header("Who killed Laura Palmer?")   
@@ -129,7 +129,7 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
         }}
     </style>
     <div class="haystack-footer">
-        <p>Get it on <a href="https://github.com/deepset-ai/haystack/">GitHub</a> &nbsp;&nbsp; - &nbsp;&nbsp;
+        <p><a href="https://github.com/anakin87/who-killed-laura-palmer">GitHub</a> &nbsp;&nbsp; - &nbsp;&nbsp;
         Built with <a href="https://github.com/deepset-ai/haystack/">Haystack</a><br/>
         <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki">Twin Peaks Wiki</a>.</small>       
     </p>
@@ -138,9 +138,11 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
     </div>
     """, unsafe_allow_html=True)
 
-    # st.sidebar.image('https://static.wikia.nocookie.net/twinpeaks/images/e/ef/Laura_Palmer%2C_the_Queen_Of_Hearts.jpg', width=270) #use_column_width='always'
-    song_i = random.randint(1,11)
-    st.sidebar.audio(f'http://twinpeaks.narod.ru/Media/0{song_i}.mp3')    
+    # spotify webplayer
+    st.sidebar.markdown("""
+    <p align="center">
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/38rrtWgflrw7grB37aMlsO?utm_source=generator" width="85%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    </p>""", unsafe_allow_html=True)   
 
     # Search bar
     question = st.text_input("",
