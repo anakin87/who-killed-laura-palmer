@@ -97,7 +97,7 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
     # Sidebar
     st.sidebar.header("Who killed Laura Palmer?")   
     st.sidebar.image("https://upload.wikimedia.org/wikipedia/it/3/39/Twin-peaks-1990.jpg")
-    st.sidebar.markdown('<p align="center">#### Twin Peaks Question Answering system</p>', unsafe_allow_html=True)
+    st.sidebar.markdown('<p align="center"><b>Twin Peaks Question Answering system</b></p>', unsafe_allow_html=True)
     st.sidebar.markdown(f"""
     <style>
         a {{
