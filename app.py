@@ -64,7 +64,7 @@ cache = Cache('./cache', size_limit=1*2**30)
 # since our index is fixed and the following method is expensive,
 # we decide to cache it
 @cache.memoize()
-def query(pipe, question, retriever_top_k=10, reader_top_k=5):
+def query(pipe, question, retriever_top_k=10, reader_top_k=5) -> dict:
     """Run query and get answers"""
     return (pipe.run(question, 
                 params={"Retriever": {"top_k": retriever_top_k}, 
@@ -72,7 +72,8 @@ def query(pipe, question, retriever_top_k=10, reader_top_k=5):
 
 
 def main():
-
+    # start a disk cache (1Gb)
+    cache = Cache('./cache', size_limit=1*2**30)
     
     pipe=start_haystack()
     questions = load_questions()
