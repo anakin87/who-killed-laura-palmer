@@ -56,7 +56,7 @@ def set_state_if_absent(key, value):
         st.session_state[key] = value
 
 # hash_funcs={builtins.weakref: my_hash_func}
-@st.cache(persist=True, hash_funcs={"builtins.weakref": lambda _: None}, allow_output_mutation=True)
+# @st.cache(persist=True, hash_funcs={"builtins.weakref": lambda _: None}, allow_output_mutation=True)
 def query(pipe, question, retriever_top_k=10, reader_top_k=5) -> dict:
     """Run query and get answers"""
     return (pipe.run(question, 
