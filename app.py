@@ -38,7 +38,9 @@ def start_haystack():
     embedding_model="sentence-transformers/multi-qa-mpnet-base-dot-v1",
     model_format="sentence_transformers"
   )
-  reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
+  reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2",
+                        use_gpu=False,
+                        confidence_threshold=0.15)
   pipe = ExtractiveQAPipeline(reader, retriever)
   return pipe
 
@@ -203,6 +205,8 @@ and see if the AI ​​can find an answer...
         st.write("## Results:")
 
         alert_irrelevance=True
+        if len(st.session_state.results['answers'])>0:
+            st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 
         for count, result in enumerate(st.session_state.results['answers']):
             result=result.to_dict()
@@ -217,10 +221,8 @@ and see if the AI ​​can find an answer...
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
             st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."), unsafe_allow_html=True)
             source = ""
-            name = unquote(result['meta']['name'])
+            name = unquote(result['meta']['name']).replace('_',' ')
             url = result['meta']['url']
             source = f"[{name}]({url})"
             st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
-    else:
-        st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 main()
