@@ -47,7 +47,8 @@ def start_haystack():
 @st.cache()
 def load_questions():
     with open('./data/questions.txt') as fin:
-        questions = [line.strip() for line in fin.readlines()]
+        questions = [line.strip() for line in fin.readlines()
+                    if not line.startswith('#')]
     return questions    
 
 def set_state_if_absent(key, value):
@@ -150,7 +151,7 @@ and see if the AI ​​can find an answer...
     question = st.text_input("",
         value=st.session_state.question,
         max_chars=100,
-        #on_change=reset_results
+        on_change=reset_results
     )
     col1, col2 = st.columns(2)
     col1.markdown("<style>.stButton button {width:100%;}</style>", unsafe_allow_html=True)
@@ -195,10 +196,7 @@ and see if the AI ​​can find an answer...
                 return
             except Exception as e:
                 logging.exception(e)
-                if "The server is busy processing requests" in str(e) or "503" in str(e):
-                    st.error("🧑‍🌾 &nbsp;&nbsp; All our workers are busy! Try again later.")
-                else:
-                    st.error("🐞 &nbsp;&nbsp; An error occurred during the request.")
+                st.error("🐞 &nbsp;&nbsp; An error occurred during the request.")
                 return
 
     if st.session_state.results:
