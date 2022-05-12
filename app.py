@@ -78,7 +78,20 @@ def main():
         st.session_state.results = None
         st.session_state.raw_json = None
 
-
+    # sidebar style
+    st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child{
+        width: 350px;
+    }
+    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child{
+        width: 350px;
+        margin-left: -350px;
+    }
+    """,
+    unsafe_allow_html=True,
+    )
     # Title
     st.write("# Who killed Laura Palmer?")
     st.write("### The first Twin Peaks Question Answering system!")
