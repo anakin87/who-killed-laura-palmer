@@ -205,7 +205,7 @@ and see if the AI ​​can find an answer...
         st.write("## Results:")
 
         alert_irrelevance=True
-        if len(st.session_state.results['answers'])>0:
+        if len(st.session_state.results['answers'])==0:
             st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 
         for count, result in enumerate(st.session_state.results['answers']):
@@ -213,7 +213,10 @@ and see if the AI ​​can find an answer...
             if result["answer"]:
                 if alert_irrelevance and result['score']<0.50:
                     alert_irrelevance = False
-                    st.write("<h4 style='color: darkred'>Attention, the following answers have low score:</h3>", unsafe_allow_html=True)
+                    st.write("""
+                    <h4 style='color: darkred'>Attention, the 
+                    following answers have low relevance:</h4>""",
+                    unsafe_allow_html=True)
 
             answer, context = result["answer"], result["context"]
             start_idx = context.find(answer)
