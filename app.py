@@ -38,7 +38,13 @@ def start_haystack():
   )
   reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=True)
   pipe = ExtractiveQAPipeline(reader, retriever)
-  return pipe  
+  return pipe
+
+@st.cache()
+def load_questions():
+    with open('./data/questions.txt') as fin:
+        questions = [line.strip() for line in fin.readlines()]
+    return questions    
 
 def set_state_if_absent(key, value):
     if key not in st.session_state:
@@ -48,21 +54,13 @@ def query(pipe, question):
     """Run query and get answers"""
     return (pipe.run(question, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}}), None)
 
-def get_backlink(result) -> Tuple[Optional[str], Optional[str]]:
-    if result.get("document", None):
-        doc = result["document"]
-        if isinstance(doc, dict):
-            if doc.get("meta", None):
-                if isinstance(doc["meta"], dict):
-                    if doc["meta"].get("url", None) and doc["meta"].get("name", None):
-                        return doc["meta"]["url"], doc["meta"]["name"]
-    return None, None  
 
 def main():
     # st.set_page_config(page_title='Who killed Laura Palmer?',
     # page_icon="https://static.wikia.nocookie.net/twinpeaks/images/4/4a/Site-favicon.ico/revision/latest?cb=20210710003705")
     
     pipe=start_haystack()
+    questions = load_questions()
 
     # Persistent state
     set_state_if_absent('question', "Where is Twin Peaks?")
@@ -157,15 +155,14 @@ and see if the AI ​​can find an answer...
     # Run button
     run_pressed = col1.button("Run")
 
-    df=''
     # Get next random question from the CSV
     if col2.button("Random question"):
         reset_results()
-        new_row = df.sample(1)
-        while new_row["Question Text"].values[0] == st.session_state.question:  # Avoid picking the same question twice (the change is not visible on the UI)
-            new_row = df.sample(1)
-        st.session_state.question = new_row["Question Text"].values[0]
-        st.session_state.answer = new_row["Answer"].values[0]
+        question = random.choice(questions)
+        while question == st.session_state.question:  # Avoid picking the same question twice (the change is not visible on the UI)
+            question = random.choice(questions)
+        st.session_state.question = question
+        # st.session_state.answer = new_row["Answer"].values[0]
         st.session_state.random_question_requested = True
         # Re-runs the script setting the random question as the textbox value
         # Unfortunately necessary as the Random Question button is _below_ the textbox
@@ -220,12 +217,10 @@ and see if the AI ​​can find an answer...
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
             st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."), unsafe_allow_html=True)
             source = ""
-            url, title = get_backlink(result)
-            if url and title:
-                source = f"[{result['document']['meta']['title']}]({result['document']['meta']['url']})"
-            else:
-                source = f"{result['source']}"
-            st.markdown(f"**Score:** {result['relevance']} -  **Source:** {source}")
+            name = result['meta']['name']
+            url = result['meta']['url']
+            source = f"[{name}]({url})"
+            st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
         else:
             st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 main()
