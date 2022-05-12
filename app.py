@@ -1,21 +1,17 @@
-import os
+
 import time
 import streamlit as st
-import subprocess
-import sys
 import logging
 import pandas as pd
 from json import JSONDecodeError
-from pathlib import Path
 from markdown import markdown
 import random
 from typing import List, Dict, Any, Tuple
 
-from haystack.document_stores import ElasticsearchDocumentStore, FAISSDocumentStore
+from haystack.document_stores import FAISSDocumentStore
 from haystack.nodes import EmbeddingRetriever
 from haystack.pipelines import ExtractiveQAPipeline
-from haystack.preprocessor.preprocessor import PreProcessor
-from haystack.nodes import FARMReader, TransformersReader
+from haystack.nodes import FARMReader
 from haystack.pipelines import ExtractiveQAPipeline
 from annotated_text import annotation
 import shutil
@@ -48,20 +44,19 @@ def set_state_if_absent(key, value):
     if key not in st.session_state:
         st.session_state[key] = value
 
-def get_backlink(result, ip) -> str:
-    """
-    Build URL from metadata and Google VM IP
-    (quick and dirty)
-    """
-    meta = result['meta']
-    fpath = meta['filepath'].rpartition('/')[-1]
-    fname = fpath.rpartition('.')[0]
-    return f'http://{ip}:8000/data/final/ner_html/{fname}.html'
-
-
 def query(pipe, question):
     """Run query and get answers"""
     return (pipe.run(question, params={"Retriever": {"top_k": 10}, "Reader": {"top_k": 5}}), None)
+
+def get_backlink(result) -> Tuple[str, str]:
+    if result.get("document", None):
+        doc = result["document"]
+        if isinstance(doc, dict):
+            if doc.get("meta", None):
+                if isinstance(doc["meta"], dict):
+                    if doc["meta"].get("url", None) :
+                        return doc["meta"]["url"]
+    return None    
 
 def main():
     # st.set_page_config(page_title='Who killed Laura Palmer?',
@@ -146,11 +141,28 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
 
     # Run button
     run_pressed = col1.button("Run")
+
+    df=''
+    # Get next random question from the CSV
+    if col2.button("Random question"):
+        reset_results()
+        new_row = df.sample(1)
+        while new_row["Question Text"].values[0] == st.session_state.question:  # Avoid picking the same question twice (the change is not visible on the UI)
+            new_row = df.sample(1)
+        st.session_state.question = new_row["Question Text"].values[0]
+        st.session_state.answer = new_row["Answer"].values[0]
+        st.session_state.random_question_requested = True
+        # Re-runs the script setting the random question as the textbox value
+        # Unfortunately necessary as the Random Question button is _below_ the textbox
+        raise st.script_runner.RerunException(st.script_request_queue.RerunData(None))
+    else:
+        st.session_state.random_question_requested = False
     
     run_query = (run_pressed or question != st.session_state.question) and not st.session_state.random_question_requested
 
     # Get results for query
     if run_query and question:
+        time_start=time.time()
         reset_results()
         st.session_state.question = question
 
@@ -160,6 +172,8 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
         ):
             try:
                 st.session_state.results, st.session_state.raw_json = query(pipe, question)
+                time_end=time.time()
+                print(f'elapsed time: {time_end - time_start}')
             except JSONDecodeError as je:
                 st.error("👓 &nbsp;&nbsp; An error occurred reading the results. Is the document store working?")
                 return
@@ -190,7 +204,13 @@ Ask any question on [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
             #url = get_backlink(result, my_ip)
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
             st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#8ef")) + context[end_idx:]+"..."), unsafe_allow_html=True)
-            #st.write(markdown(f"<a href='{url}'>{title} - <i>{authors}</i></a>"), unsafe_allow_html=True)
-            #st.write(markdown(f"**Relevance:** {result['score']:.2f}"), unsafe_allow_html=True)
-
+            source = ""
+            url = get_backlink(result)
+            if url:
+                source = f"({result['document']['meta']['url']})"
+            else:
+                source = f"{result['source']}"
+            st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
+        else:
+            st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 main()
