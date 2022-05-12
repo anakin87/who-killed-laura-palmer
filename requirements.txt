@@ -1,5 +1,4 @@
 farm-haystack[faiss]==1.4.0
 markdown
 st-annotated-text
-diskcache==5.4.0
 # streamlit==1.2.0
