@@ -15,6 +15,8 @@ from haystack.nodes import FARMReader
 from haystack.pipelines import ExtractiveQAPipeline
 from annotated_text import annotation
 import shutil
+from urllib.parse import unquote
+
 
 # FAISS index directory
 INDEX_DIR = 'data/index'
@@ -207,7 +209,7 @@ and see if the AI ​​can find an answer...
             if result["answer"]:
                 if alert_irrelevance and result['score']<0.50:
                     alert_irrelevance = False
-                    st.write("<h3 style='color: red'>Attention, the following answers have low score:</h3>", unsafe_allow_html=True)
+                    st.write("<h4 style='color: darkred'>Attention, the following answers have low score:</h3>", unsafe_allow_html=True)
 
             answer, context = result["answer"], result["context"]
             start_idx = context.find(answer)
@@ -215,7 +217,7 @@ and see if the AI ​​can find an answer...
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
             st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."), unsafe_allow_html=True)
             source = ""
-            name = result['meta']['name'].replace('_',' ')
+            name = unquote(result['meta']['name'])
             url = result['meta']['url']
             source = f"[{name}]({url})"
             st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
