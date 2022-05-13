@@ -1,6 +1,6 @@
 
 INDEX_DIR = 'data/index'
-QUESTIONS_PATH = 'data/questions.txt'
+QUESTIONS_PATH = 'data/questions/selected_questions.txt'
 RETRIEVER_MODEL = "sentence-transformers/multi-qa-mpnet-base-dot-v1"
 RETRIEVER_MODEL_FORMAT = "sentence_transformers"
 READER_MODEL = "deepset/roberta-base-squad2"
