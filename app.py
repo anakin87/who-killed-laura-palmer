@@ -33,7 +33,7 @@ def start_app():
 def load_questions_wrapper():
     return load_questions()
 
-pipe = start_haystack()
+pipe = start_app()
 
 # the pipeline is not included as parameter of the following function,
 # because it is difficult to cache
