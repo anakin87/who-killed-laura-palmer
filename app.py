@@ -9,7 +9,8 @@ from typing import List, Dict, Any, Tuple, Optional
 from annotated_text import annotation
 from urllib.parse import unquote
 
-from haystack_utils import start_haystack, set_state_if_absent, load_questions
+from haystack_utils import (set_state_if_absent, load_questions,
+    query)
 
 INDEX_DIR = 'data/index'
 QUESTIONS_PATH = 'data/questions.txt'
@@ -20,30 +21,7 @@ READER_CONFIG_THRESHOLD = 0.15
 RETRIEVER_TOP_K = 10
 READER_TOP_K = 5
 
-# the following function is a wrapper for start_haystack,
-# which loads document store, retriever, reader and creates pipeline.
-# cached to make index and models load only at start
-@st.cache(hash_funcs={"builtins.SwigPyObject": lambda _: None},
-          allow_output_mutation=True)
-def start_app():
-    return start_haystack()
 
-
-@st.cache()
-def load_questions_wrapper():
-    return load_questions()
-
-pipe = start_app()
-
-# the pipeline is not included as parameter of the following function,
-# because it is difficult to cache
-@st.cache(persist=True, allow_output_mutation=True)
-def query(question: str, retriever_top_k: int = 10, reader_top_k: int = 5):
-    """Run query and get answers"""
-    params = {"Retriever": {"top_k": retriever_top_k},
-              "Reader": {"top_k": reader_top_k}}
-    results = pipe.run(question, params=params)
-    return results
 
 
 def main():
