@@ -20,7 +20,7 @@ from urllib.parse import unquote
 
 # FAISS index directory
 INDEX_DIR = 'data/index'
-
+pipe=None
 
 # the following function is cached to make index and models load only at start
 @st.cache(hash_funcs={"builtins.SwigPyObject": lambda _: None}, allow_output_mutation=True)
@@ -56,12 +56,13 @@ def set_state_if_absent(key, value):
         st.session_state[key] = value
 
 # hash_funcs={builtins.weakref: my_hash_func}
-# @st.cache(persist=True, hash_funcs={"builtins.weakref": lambda _: None}, allow_output_mutation=True)
-def query(pipe, question, retriever_top_k=10, reader_top_k=5) -> dict:
+@st.cache(persist=True, allow_output_mutation=True)
+def query(question, retriever_top_k=10, reader_top_k=5) -> dict:
     """Run query and get answers"""
-    return (pipe.run(question, 
-                params={"Retriever": {"top_k": retriever_top_k}, 
-                        "Reader": {"top_k": reader_top_k}}), None)
+    params = {"Retriever": {"top_k": retriever_top_k}, 
+              "Reader": {"top_k": reader_top_k}}
+    results = pipe.run(question, params=params)
+    return results
 
 
 def main():
@@ -190,7 +191,7 @@ and see if the AI ​​can find an answer...
 
         ):
             try:
-                st.session_state.results, st.session_state.raw_json = query(pipe, question)
+                st.session_state.results = query(pipe)
                 time_end=time.time()
                 print(f'elapsed time: {time_end - time_start}')
             except JSONDecodeError as je:
