@@ -20,7 +20,7 @@ from urllib.parse import unquote
 
 # FAISS index directory
 INDEX_DIR = 'data/index'
-pipe=None
+# pipe=None
 
 # the following function is cached to make index and models load only at start
 @st.cache(hash_funcs={"builtins.SwigPyObject": lambda _: None}, allow_output_mutation=True)
@@ -55,6 +55,8 @@ def set_state_if_absent(key, value):
     if key not in st.session_state:
         st.session_state[key] = value
 
+pipe=start_haystack()
+
 # hash_funcs={builtins.weakref: my_hash_func}
 @st.cache(persist=True, allow_output_mutation=True)
 def query(question: str, retriever_top_k:int=10, reader_top_k:int=5):
@@ -67,7 +69,7 @@ def query(question: str, retriever_top_k:int=10, reader_top_k:int=5):
 
 def main():
    
-    pipe=start_haystack()
+    
     questions = load_questions()
 
     # Persistent state
