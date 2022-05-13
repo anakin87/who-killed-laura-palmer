@@ -2,7 +2,6 @@
 import time
 import streamlit as st
 import logging
-import pandas as pd
 from json import JSONDecodeError
 from markdown import markdown
 import random
@@ -20,56 +19,71 @@ from urllib.parse import unquote
 
 # FAISS index directory
 INDEX_DIR = 'data/index'
+QUESTIONS_PATH = 'data/questions.txt'
+RETRIEVER_MODEL = "sentence-transformers/multi-qa-mpnet-base-dot-v1"
+RETRIEVER_MODEL_FORMAT = "sentence_transformers"
+READER_MODEL = "deepset/roberta-base-squad2"
+READER_CONFIG_THRESHOLD = 0.15
+RETRIEVER_TOP_K = 10
+READER_TOP_K = 5
 # pipe=None
 
 # the following function is cached to make index and models load only at start
-@st.cache(hash_funcs={"builtins.SwigPyObject": lambda _: None}, allow_output_mutation=True)
+
+
+@st.cache(hash_funcs={"builtins.SwigPyObject": lambda _: None},
+          allow_output_mutation=True)
 def start_haystack():
-  """
-  load document store, retriever, reader and create pipeline
-  """
-  shutil.copy(f'{INDEX_DIR}/faiss_document_store.db','.')
-  document_store = FAISSDocumentStore(
-      faiss_index_path=f'{INDEX_DIR}/my_faiss_index.faiss',
-      faiss_config_path=f'{INDEX_DIR}/my_faiss_index.json')
-  print (f'Index size: {document_store.get_document_count()}')  
-  retriever = EmbeddingRetriever(
-      document_store=document_store,
-    embedding_model="sentence-transformers/multi-qa-mpnet-base-dot-v1",
-    model_format="sentence_transformers"
-  )
-  reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2",
+    """
+    load document store, retriever, reader and create pipeline
+    """
+    shutil.copy(f'{INDEX_DIR}/faiss_document_store.db', '.')
+    document_store = FAISSDocumentStore(
+        faiss_index_path=f'{INDEX_DIR}/my_faiss_index.faiss',
+        faiss_config_path=f'{INDEX_DIR}/my_faiss_index.json')
+    print(f'Index size: {document_store.get_document_count()}')
+    retriever = EmbeddingRetriever(
+        document_store=document_store,
+        embedding_model=RETRIEVER_MODEL,
+        model_format=RETRIEVER_MODEL_FORMAT
+    )
+    reader = FARMReader(model_name_or_path=READER_MODEL,
                         use_gpu=False,
-                        confidence_threshold=0.15)
-  pipe = ExtractiveQAPipeline(reader, retriever)
-  return pipe
+                        confidence_threshold=READER_CONFIG_THRESHOLD)
+    pipe = ExtractiveQAPipeline(reader, retriever)
+    return pipe
+
 
 @st.cache()
 def load_questions():
-    with open('./data/questions.txt') as fin:
+    with open(QUESTIONS_PATH) as fin:
         questions = [line.strip() for line in fin.readlines()
-                    if not line.startswith('#')]
-    return questions    
+                     if not line.startswith('#')]
+    return questions
+
 
 def set_state_if_absent(key, value):
     if key not in st.session_state:
         st.session_state[key] = value
 
-pipe=start_haystack()
 
-# hash_funcs={builtins.weakref: my_hash_func}
+pipe = start_haystack()
+
+# the pipeline is not included as parameter of the following function,
+# because it is difficult to cache
+
+
 @st.cache(persist=True, allow_output_mutation=True)
-def query(question: str, retriever_top_k:int=10, reader_top_k:int=5):
+def query(question: str, retriever_top_k: int = 10, reader_top_k: int = 5):
     """Run query and get answers"""
-    params = {"Retriever": {"top_k": retriever_top_k}, 
+    params = {"Retriever": {"top_k": retriever_top_k},
               "Reader": {"top_k": reader_top_k}}
     results = pipe.run(question, params=params)
     return results
 
 
 def main():
-   
-    
+
     questions = load_questions()
 
     # Persistent state
@@ -87,7 +101,7 @@ def main():
 
     # sidebar style
     st.markdown(
-    """
+        """
     <style>
     [data-testid="stSidebar"][aria-expanded="true"] > div:first-child{
         width: 350px;
@@ -97,23 +111,25 @@ def main():
         margin-left: -350px;
     }
     """,
-    unsafe_allow_html=True,
+        unsafe_allow_html=True,
     )
     # Title
     st.write("# Who killed Laura Palmer?")
     st.write("### The first Twin Peaks Question Answering system!")
-    
+
     st.markdown("""
-Ask any question about Twin Peaks [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
+Ask any question about [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
 and see if the AI ​​can find an answer...
 
 *Note: do not use keywords, but full-fledged questions.*
 """)
 
     # Sidebar
-    st.sidebar.header("Who killed Laura Palmer?")   
-    st.sidebar.image("https://upload.wikimedia.org/wikipedia/it/3/39/Twin-peaks-1990.jpg")
-    st.sidebar.markdown('<p align="center"><b>Twin Peaks Question Answering system</b></p>', unsafe_allow_html=True)
+    st.sidebar.header("Who killed Laura Palmer?")
+    st.sidebar.image(
+        "https://upload.wikimedia.org/wikipedia/it/3/39/Twin-peaks-1990.jpg")
+    st.sidebar.markdown('<p align="center"><b>Twin Peaks Question Answering system</b></p>',
+                        unsafe_allow_html=True)
     st.sidebar.markdown(f"""
     <style>
         a {{
@@ -139,7 +155,8 @@ and see if the AI ​​can find an answer...
     <div class="haystack-footer">
         <p><a href="https://github.com/anakin87/who-killed-laura-palmer">GitHub</a> - 
         Built with <a href="https://github.com/deepset-ai/haystack/">Haystack</a><br/>
-        <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki">Twin Peaks Wiki</a>.</small>       
+        <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki">
+        Twin Peaks Wiki</a>.</small>       
     </p>
     <img src = 'https://static.wikia.nocookie.net/twinpeaks/images/e/ef/Laura_Palmer%2C_the_Queen_Of_Hearts.jpg'/>
     <br/>
@@ -150,17 +167,19 @@ and see if the AI ​​can find an answer...
     st.sidebar.markdown("""
     <p align="center">
     <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/38rrtWgflrw7grB37aMlsO?utm_source=generator" width="85%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-    </p>""", unsafe_allow_html=True)   
+    </p>""", unsafe_allow_html=True)
 
     # Search bar
     question = st.text_input("",
-        value=st.session_state.question,
-        max_chars=100,
-        on_change=reset_results
-    )
+                             value=st.session_state.question,
+                             max_chars=100,
+                             on_change=reset_results
+                             )
     col1, col2 = st.columns(2)
-    col1.markdown("<style>.stButton button {width:100%;}</style>", unsafe_allow_html=True)
-    col2.markdown("<style>.stButton button {width:100%;}</style>", unsafe_allow_html=True)
+    col1.markdown(
+        "<style>.stButton button {width:100%;}</style>", unsafe_allow_html=True)
+    col2.markdown(
+        "<style>.stButton button {width:100%;}</style>", unsafe_allow_html=True)
 
     # Run button
     run_pressed = col1.button("Run")
@@ -169,22 +188,24 @@ and see if the AI ​​can find an answer...
     if col2.button("Random question"):
         reset_results()
         question = random.choice(questions)
-        while question == st.session_state.question:  # Avoid picking the same question twice (the change is not visible on the UI)
+        # Avoid picking the same question twice (the change is not visible on the UI)
+        while question == st.session_state.question:
             question = random.choice(questions)
         st.session_state.question = question
-        # st.session_state.answer = new_row["Answer"].values[0]
         st.session_state.random_question_requested = True
         # Re-runs the script setting the random question as the textbox value
         # Unfortunately necessary as the Random Question button is _below_ the textbox
-        raise st.script_runner.RerunException(st.script_request_queue.RerunData(None))
+        raise st.script_runner.RerunException(
+            st.script_request_queue.RerunData(None))
     else:
         st.session_state.random_question_requested = False
-    
-    run_query = (run_pressed or question != st.session_state.question) and not st.session_state.random_question_requested
+
+    run_query = (run_pressed or question != st.session_state.question) \
+        and not st.session_state.random_question_requested
 
     # Get results for query
     if run_query and question:
-        time_start=time.time()
+        time_start = time.time()
         reset_results()
         st.session_state.question = question
 
@@ -193,11 +214,13 @@ and see if the AI ​​can find an answer...
 
         ):
             try:
-                st.session_state.results = query(question)
-                time_end=time.time()
+                st.session_state.results = query(
+                    question, RETRIEVER_TOP_K, READER_TOP_K)
+                time_end = time.time()
                 print(f'elapsed time: {time_end - time_start}')
             except JSONDecodeError as je:
-                st.error("👓 &nbsp;&nbsp; An error occurred reading the results. Is the document store working?")
+                st.error(
+                    "👓 &nbsp;&nbsp; An error occurred reading the results. Is the document store working?")
                 return
             except Exception as e:
                 logging.exception(e)
@@ -207,28 +230,33 @@ and see if the AI ​​can find an answer...
     if st.session_state.results:
         st.write("## Results:")
 
-        alert_irrelevance=True
-        if len(st.session_state.results['answers'])==0:
+        alert_irrelevance = True
+        if len(st.session_state.results['answers']) == 0:
             st.info("🤔 &nbsp;&nbsp; Haystack is unsure whether any of the documents contain an answer to your question. Try to reformulate it!")
 
         for count, result in enumerate(st.session_state.results['answers']):
-            result=result.to_dict()
+            result = result.to_dict()
             if result["answer"]:
-                if alert_irrelevance and result['score']<0.50:
+                if alert_irrelevance and result['score'] < 0.50:
                     alert_irrelevance = False
                     st.write("""
                     <h4 style='color: darkred'>Attention, the 
                     following answers have low relevance:</h4>""",
-                    unsafe_allow_html=True)
+                             unsafe_allow_html=True)
 
             answer, context = result["answer"], result["context"]
             start_idx = context.find(answer)
             end_idx = start_idx + len(answer)
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
-            st.write(markdown("- ..."+context[:start_idx] + str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."), unsafe_allow_html=True)
+            st.write(markdown("- ..."+context[:start_idx] +
+                              str(annotation(answer, "ANSWER", "#3e1c21")) + context[end_idx:]+"..."),
+                     unsafe_allow_html=True)
             source = ""
-            name = unquote(result['meta']['name']).replace('_',' ')
+            name = unquote(result['meta']['name']).replace('_', ' ')
             url = result['meta']['url']
             source = f"[{name}]({url})"
-            st.markdown(f"**Score:** {result['score']:.2f} -  **Source:** {source}")
+            st.markdown(
+                f"**Score:** {result['score']:.2f} -  **Source:** {source}")
+
+
 main()
