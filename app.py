@@ -57,7 +57,7 @@ def set_state_if_absent(key, value):
 
 # hash_funcs={builtins.weakref: my_hash_func}
 @st.cache(persist=True, allow_output_mutation=True)
-def query(question, retriever_top_k=10, reader_top_k=5) -> dict:
+def query(question: str, retriever_top_k:int=10, reader_top_k:int=5):
     """Run query and get answers"""
     params = {"Retriever": {"top_k": retriever_top_k}, 
               "Reader": {"top_k": reader_top_k}}
@@ -191,7 +191,7 @@ and see if the AI ​​can find an answer...
 
         ):
             try:
-                st.session_state.results = query(pipe)
+                st.session_state.results = query(question)
                 time_end=time.time()
                 print(f'elapsed time: {time_end - time_start}')
             except JSONDecodeError as je:
