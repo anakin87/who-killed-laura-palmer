@@ -9,20 +9,9 @@ from typing import List, Dict, Any, Tuple, Optional
 from annotated_text import annotation
 from urllib.parse import unquote
 
-from haystack_utils import (set_state_if_absent, load_questions,
-    query)
-
-INDEX_DIR = 'data/index'
-QUESTIONS_PATH = 'data/questions.txt'
-RETRIEVER_MODEL = "sentence-transformers/multi-qa-mpnet-base-dot-v1"
-RETRIEVER_MODEL_FORMAT = "sentence_transformers"
-READER_MODEL = "deepset/roberta-base-squad2"
-READER_CONFIG_THRESHOLD = 0.15
-RETRIEVER_TOP_K = 10
-READER_TOP_K = 5
-
-
-
+from backend_utils import load_questions, query
+from frontend_utils import set_state_if_absent, reset_results
+from config import RETRIEVER_TOP_K, READER_TOP_K
 
 def main():
 
@@ -35,13 +24,19 @@ def main():
     set_state_if_absent('raw_json', None)
     set_state_if_absent('random_question_requested', False)
 
-    # Small callback to reset the interface in case the text of the question changes
-    def reset_results(*args):
-        st.session_state.answer = None
-        st.session_state.results = None
-        st.session_state.raw_json = None
 
-    # sidebar style
+    # Header
+    st.write("# Who killed Laura Palmer?")
+    st.write("### The first Twin Peaks Question Answering system!")
+    st.markdown("""
+Ask any question about [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
+and see if the AI ​​can find an answer...
+
+*Note: do not use keywords, but full-fledged questions.*
+""")
+
+    # Sidebar
+        # sidebar style
     st.markdown(
         """
     <style>
@@ -55,18 +50,6 @@ def main():
     """,
         unsafe_allow_html=True,
     )
-    # Title
-    st.write("# Who killed Laura Palmer?")
-    st.write("### The first Twin Peaks Question Answering system!")
-
-    st.markdown("""
-Ask any question about [Twin Peaks] (https://twinpeaks.fandom.com/wiki/Twin_Peaks) 
-and see if the AI ​​can find an answer...
-
-*Note: do not use keywords, but full-fledged questions.*
-""")
-
-    # Sidebar
     st.sidebar.header("Who killed Laura Palmer?")
     st.sidebar.image(
         "https://upload.wikimedia.org/wikipedia/it/3/39/Twin-peaks-1990.jpg")
