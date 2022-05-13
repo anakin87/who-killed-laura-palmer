@@ -6,18 +6,11 @@ from json import JSONDecodeError
 from markdown import markdown
 import random
 from typing import List, Dict, Any, Tuple, Optional
-
-from haystack.document_stores import FAISSDocumentStore
-from haystack.nodes import EmbeddingRetriever
-from haystack.pipelines import ExtractiveQAPipeline
-from haystack.nodes import FARMReader
-from haystack.pipelines import ExtractiveQAPipeline
 from annotated_text import annotation
-import shutil
 from urllib.parse import unquote
 
+from haystack_utils import start_haystack, set_state_if_absent, load_questions
 
-# FAISS index directory
 INDEX_DIR = 'data/index'
 QUESTIONS_PATH = 'data/questions.txt'
 RETRIEVER_MODEL = "sentence-transformers/multi-qa-mpnet-base-dot-v1"
@@ -26,53 +19,24 @@ READER_MODEL = "deepset/roberta-base-squad2"
 READER_CONFIG_THRESHOLD = 0.15
 RETRIEVER_TOP_K = 10
 READER_TOP_K = 5
-# pipe=None
 
-# the following function is cached to make index and models load only at start
-
-
+# the following function is a wrapper for start_haystack,
+# which loads document store, retriever, reader and creates pipeline.
+# cached to make index and models load only at start
 @st.cache(hash_funcs={"builtins.SwigPyObject": lambda _: None},
           allow_output_mutation=True)
-def start_haystack():
-    """
-    load document store, retriever, reader and create pipeline
-    """
-    shutil.copy(f'{INDEX_DIR}/faiss_document_store.db', '.')
-    document_store = FAISSDocumentStore(
-        faiss_index_path=f'{INDEX_DIR}/my_faiss_index.faiss',
-        faiss_config_path=f'{INDEX_DIR}/my_faiss_index.json')
-    print(f'Index size: {document_store.get_document_count()}')
-    retriever = EmbeddingRetriever(
-        document_store=document_store,
-        embedding_model=RETRIEVER_MODEL,
-        model_format=RETRIEVER_MODEL_FORMAT
-    )
-    reader = FARMReader(model_name_or_path=READER_MODEL,
-                        use_gpu=False,
-                        confidence_threshold=READER_CONFIG_THRESHOLD)
-    pipe = ExtractiveQAPipeline(reader, retriever)
-    return pipe
+def start_app():
+    return start_haystack()
 
 
 @st.cache()
-def load_questions():
-    with open(QUESTIONS_PATH) as fin:
-        questions = [line.strip() for line in fin.readlines()
-                     if not line.startswith('#')]
-    return questions
-
-
-def set_state_if_absent(key, value):
-    if key not in st.session_state:
-        st.session_state[key] = value
-
+def load_questions_wrapper():
+    return load_questions()
 
 pipe = start_haystack()
 
 # the pipeline is not included as parameter of the following function,
 # because it is difficult to cache
-
-
 @st.cache(persist=True, allow_output_mutation=True)
 def query(question: str, retriever_top_k: int = 10, reader_top_k: int = 5):
     """Run query and get answers"""
