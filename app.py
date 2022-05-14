@@ -7,9 +7,10 @@ from json import JSONDecodeError
 from markdown import markdown
 from annotated_text import annotation
 from urllib.parse import unquote
+import random
 
 from backend_utils import load_questions, query
-from frontend_utils import (set_state_if_absent, reset_results, get_random_question,
+from frontend_utils import (set_state_if_absent, reset_results, 
     SIDEBAR_STYLE, TWIN_PEAKS_IMG_SRC, LAURA_PALMER_IMG_SRC, SPOTIFY_IFRAME)
 from config import RETRIEVER_TOP_K, READER_TOP_K
 
@@ -27,7 +28,7 @@ def main():
     st.markdown(SIDEBAR_STYLE, unsafe_allow_html=True)
     st.sidebar.header("Who killed Laura Palmer?")
     st.sidebar.image(TWIN_PEAKS_IMG_SRC)
-    st.sidebar.markdown("""
+    st.sidebar.markdown(f"""
         <p align="center"><b>Twin Peaks Question Answering system</b></p>
         <div class="haystack-footer">
         <p><a href="https://github.com/anakin87/who-killed-laura-palmer">GitHub</a> - 
@@ -61,7 +62,17 @@ def main():
     run_pressed = col1.button("Run")
     # Random question button
     if col2.button("Random question"):
-        get_random_question(question)
+        reset_results()
+        question = random.choice(questions)
+        # Avoid picking the same question twice (the change is not visible on the UI)
+        while question == st.session_state.question:
+            question = random.choice(questions)
+        st.session_state.question = question
+        st.session_state.random_question_requested = True
+        # Re-runs the script setting the random question as the textbox value
+        # Unfortunately necessary as the Random Question button is _below_ the textbox
+        raise st.script_runner.RerunException(
+            st.script_request_queue.RerunData(None))
     else:
         st.session_state.random_question_requested = False
     run_query = (run_pressed or question != st.session_state.question) \
