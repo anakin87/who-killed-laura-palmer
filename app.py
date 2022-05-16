@@ -9,10 +9,10 @@ from annotated_text import annotation
 from urllib.parse import unquote
 import random
 
-from backend_utils import load_questions, query
-from frontend_utils import (set_state_if_absent, reset_results, 
+from app_utils.backend_utils import load_questions, query
+from app_utils.frontend_utils import (set_state_if_absent, reset_results, 
     SIDEBAR_STYLE, TWIN_PEAKS_IMG_SRC, LAURA_PALMER_IMG_SRC, SPOTIFY_IFRAME)
-from config import RETRIEVER_TOP_K, READER_TOP_K
+from app_utils.config import RETRIEVER_TOP_K, READER_TOP_K, LOW_RELEVANCE_THRESHOLD
 
 def main():
     questions = load_questions()
@@ -109,7 +109,7 @@ def main():
         for result in st.session_state.results['answers']:
             result = result.to_dict()
             if result["answer"]:
-                if alert_irrelevance and result['score'] < 0.50:
+                if alert_irrelevance and result['score'] < LOW_RELEVANCE_THRESHOLD:
                     alert_irrelevance = False
                     st.write("""
                     <h4 style='color: darkred'>Attention, the 

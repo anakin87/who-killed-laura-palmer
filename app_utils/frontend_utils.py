@@ -1,5 +1,5 @@
 import streamlit as st
-import random
+
 
 def set_state_if_absent(key, value):
     if key not in st.session_state:
@@ -10,19 +10,6 @@ def reset_results(*args):
     st.session_state.answer = None
     st.session_state.results = None
     st.session_state.raw_json = None
-
-def get_random_question(questions):
-    reset_results()
-    question = random.choice(questions)
-    # Avoid picking the same question twice (the change is not visible on the UI)
-    while question == st.session_state.question:
-        question = random.choice(questions)
-    st.session_state.question = question
-    st.session_state.random_question_requested = True
-    # Re-runs the script setting the random question as the textbox value
-    # Unfortunately necessary as the Random Question button is _below_ the textbox
-    raise st.script_runner.RerunException(
-        st.script_request_queue.RerunData(None))
 
 SIDEBAR_STYLE = """
     <style>
