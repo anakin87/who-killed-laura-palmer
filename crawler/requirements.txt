@@ -1,2 +1,2 @@
 fandom-py==0.2.1
-Scrapy==2.5.1
+Scrapy==2.6.1
