@@ -5,7 +5,7 @@ from haystack.pipelines import ExtractiveQAPipeline
 from haystack.nodes import FARMReader
 import streamlit as st
 
-from config import (INDEX_DIR, RETRIEVER_MODEL, RETRIEVER_MODEL_FORMAT,
+from app_utils.config import (INDEX_DIR, RETRIEVER_MODEL, RETRIEVER_MODEL_FORMAT,
     READER_MODEL, READER_CONFIG_THRESHOLD, QUESTIONS_PATH)
 
 # cached to make index and models load only at start
