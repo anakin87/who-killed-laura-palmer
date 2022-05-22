@@ -121,7 +121,7 @@ def main():
             end_idx = start_idx + len(answer)
             # Hack due to this bug: https://github.com/streamlit/streamlit/issues/3190
             st.write(markdown("- ..."+context[:start_idx] +
-                    str(annotation(answer, "ANSWER", "#3e1c21")) + 
+                    str(annotation(answer, "ANSWER", "#3e1c21", "white")) + 
                     context[end_idx:]+"..."), unsafe_allow_html=True)
             source = ""
             name = unquote(result['meta']['name']).replace('_', ' ')
