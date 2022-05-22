@@ -31,11 +31,11 @@ def main():
     st.sidebar.markdown(f"""
         <p align="center"><b>Twin Peaks Question Answering system</b></p>
         <div class="haystack-footer">
-        <p><a href="https://github.com/anakin87/who-killed-laura-palmer">GitHub</a> - 
-        Built with <a href="https://github.com/deepset-ai/haystack/">Haystack</a><br/>
-        <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki">
+        <p><a href="https://github.com/anakin87/who-killed-laura-palmer" target="_blank">GitHub</a> - 
+        Built with <a href="https://github.com/deepset-ai/haystack/" target="_blank">Haystack</a><br/>
+        <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki" target="_blank">
         Twin Peaks Wiki</a>.</small>       
-        </p><img src = '{LAURA_PALMER_IMG_SRC}'/><br/></div>
+        </p><img src="{LAURA_PALMER_IMG_SRC}"/><br/></div>
         """, unsafe_allow_html=True)
     # spotify webplayer
     st.sidebar.markdown(SPOTIFY_IFRAME, unsafe_allow_html=True)
