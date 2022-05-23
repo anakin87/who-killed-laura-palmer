@@ -1,3 +1,4 @@
+<!---
 ---
 title: Who killed Laura Palmer?
 emoji: 🗻🗻
@@ -9,6 +10,7 @@ app_file: app.py
 pinned: false
 license: mit
 ---
+-->
 
 # Who killed Laura Palmer? &nbsp; [![Generic badge](https://img.shields.io/badge/🤗-Open%20in%20Spaces-blue.svg)](https://huggingface.co/spaces/anakin87/who-killed-laura-palmer) [![Generic badge](https://img.shields.io/github/stars/anakin87/who-killed-laura-palmer?label=Github&style=social)](https://github.com/anakin87/who-killed-laura-palmer)
 ## 🗻🗻 Twin Peaks Question Answering system
