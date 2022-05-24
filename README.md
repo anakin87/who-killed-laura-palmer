@@ -7,7 +7,7 @@ sdk: streamlit
 sdk_version: 1.2.0
 app_file: app.py
 pinned: false
-license: Apache-2.0
+license: apache-2.0
 ---
 
 # Who killed Laura Palmer? &nbsp; [![Generic badge](https://img.shields.io/badge/🤗-Open%20in%20Spaces-blue.svg)](https://huggingface.co/spaces/anakin87/who-killed-laura-palmer) [![Generic badge](https://img.shields.io/github/stars/anakin87/who-killed-laura-palmer?label=Github&style=social)](https://github.com/anakin87/who-killed-laura-palmer)
