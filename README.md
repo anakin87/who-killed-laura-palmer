@@ -11,7 +11,7 @@ license: Apache-2.0
 ---
 
 # Who killed Laura Palmer? &nbsp; [![Generic badge](https://img.shields.io/badge/🤗-Open%20in%20Spaces-blue.svg)](https://huggingface.co/spaces/anakin87/who-killed-laura-palmer) [![Generic badge](https://img.shields.io/github/stars/anakin87/who-killed-laura-palmer?label=Github&style=social)](https://github.com/anakin87/who-killed-laura-palmer)
-[<img src="./data/readme_images/spaces_logo.png" style="display: block;margin-left: auto;
+[<img src="./data/readme_images/spaces_logo.png" align="center" style="display: block;margin-left: auto;
   margin-right: auto;  max-width: 70%;}">](https://huggingface.co/spaces/anakin87/who-killed-laura-palmer)
 
 
@@ -28,7 +28,7 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 
 ## Project architecture 🧱
 
-![Project architecture](./data/readme_images/project_architecture.png) 
+[![Project architecture](./data/readme_images/project_architecture.png)](#) 
 
 * Crawler: implemented using [Scrapy](https://github.com/scrapy/scrapy) and [fandom-py](https://github.com/NikolajDanger/fandom-py)
 * Question Answering pipelines: created with [Haystack](https://github.com/deepset-ai/haystack)
@@ -43,7 +43,7 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 - How to build a nice [Streamlit](https://github.com/streamlit/streamlit) web app to show your QA system
 - How to optimize the web app to 🚀 deploy in [🤗 Spaces](https://huggingface.co/spaces)
 
-![Web app preview](./data/readme_images/webapp.png)
+[![Web app preview](./data/readme_images/webapp.png)](https://huggingface.co/spaces/anakin87/who-killed-laura-palmer)
 
 ## Repository structure 📁
 - [app.py](./app.py): Streamlit web app
