@@ -55,8 +55,14 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 Within each folder, you can find more in-depth explanations.
 
 ## Possible improvements ✨
+### Project structure
+- The project is optimized to be deployed in Hugging Face Spaces and consists of an all-in-one Streamlit web app. In more structured production environments, I suggest dividing the software into three parts:
+  - Haystack backend API (as explained in [the official documentation](https://haystack.deepset.ai/components/rest-api))
+  - Document store service
+  - Streamlit web app
+### Reader
 - The reader model (`deepset/roberta-base-squad2`) is a good compromise between speed and accuracy, running on CPU. There are certainly better (and more computationally expensive) models, as you can read in the [Haystack documentation](https://haystack.deepset.ai/pipeline_nodes/reader).
 - You can also think about preparing a Twin Peaks QA dataset and fine-tune the reader model to get better accuracy, as explained in this [Haystack tutorial](https://haystack.deepset.ai/tutorials/fine-tuning-a-model).
-- ...
+
 
 
