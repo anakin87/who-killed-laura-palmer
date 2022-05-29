@@ -22,8 +22,8 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 
   - [Project architecture 🧱](#project-architecture-)
   - [What can I learn from this project? 📚](#what-can-i-learn-from-this-project-)
-  - [Installation 💻](#installation-)
   - [Repository structure 📁](#repository-structure-)
+  - [Installation 💻](#installation-)
   - [Possible improvements ✨](#possible-improvements-)
 ---
 
