@@ -22,6 +22,7 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 
   - [Project architecture 🧱](#project-architecture-)
   - [What can I learn from this project? 📚](#what-can-i-learn-from-this-project-)
+  - [Installation 💻](#installation-)
   - [Repository structure 📁](#repository-structure-)
   - [Possible improvements ✨](#possible-improvements-)
 ---
@@ -53,6 +54,14 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 - [data folder](./data/): all necessary data
 
 Within each folder, you can find more in-depth explanations.
+
+## Installation 💻
+To install this project locally, follow these steps:
+- `git clone https://github.com/anakin87/who-killed-laura-palmer`
+- `cd who-killed-laura-palmer`
+- `pip install -r requirements.txt`
+
+To run the web app, simply type: `streamlit run app.py`
 
 ## Possible improvements ✨
 ### Project structure
