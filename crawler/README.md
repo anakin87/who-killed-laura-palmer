@@ -5,8 +5,8 @@ This crawler download texts and metadata from [Twin Peaks Fandom Wiki](https://t
 *Several wiki pages are discarded, since they are not related to Twin Peaks plot and create noise in the Question Answering index.*
 
 ## Installation
-- `pip install -r requirements.txt`
 - copy this folder (if needed, see [stackoverflow](https://stackoverflow.com/questions/7106012/download-a-single-folder-or-directory-from-a-github-repo))
+- `pip install -r requirements.txt`
 
 ## Usage
 - (if needed, activate the virtual environment)

@@ -1,5 +1,0 @@
-farm-haystack[faiss]==1.4.0
-markdown
-st-annotated-text
-streamlit==1.2.0
-protobuf==3.20.1
