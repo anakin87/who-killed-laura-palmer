@@ -22,8 +22,8 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 
   - [Project architecture 🧱](#project-architecture-)
   - [What can I learn from this project? 📚](#what-can-i-learn-from-this-project-)
-  - [Installation 💻](#installation-)
   - [Repository structure 📁](#repository-structure-)
+  - [Installation 💻](#installation-)
   - [Possible improvements ✨](#possible-improvements-)
 ---
 
@@ -71,7 +71,7 @@ To run the web app, simply type: `streamlit run app.py`
   - Streamlit web app
 ### Reader
 - The reader model (`deepset/roberta-base-squad2`) is a good compromise between speed and accuracy, running on CPU. There are certainly better (and more computationally expensive) models, as you can read in the [Haystack documentation](https://haystack.deepset.ai/pipeline_nodes/reader).
-- You can also think about preparing a Twin Peaks QA dataset and fine-tune the reader model to get better accuracy, as explained in this [Haystack tutorial](https://haystack.deepset.ai/tutorials/fine-tuning-a-model).
+- You can also think about preparing a Twin Peaks QA dataset and fine-tuning the reader model to get better accuracy, as explained in this [Haystack tutorial](https://haystack.deepset.ai/tutorials/fine-tuning-a-model).
 
 
 
