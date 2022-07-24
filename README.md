@@ -52,6 +52,7 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 - [crawler folder](./crawler/): Twin Peaks crawler, developed with Scrapy and fandom-py
 - [notebooks folder](./notebooks/): Jupyter/Colab notebooks to create the Search pipeline and generate questions (using Haystack)
 - [data folder](./data/): all necessary data
+- [presentations](./presentations/): Video presentation and slides (PyCon Italy 2022)
 
 Within each folder, you can find more in-depth explanations.
 
