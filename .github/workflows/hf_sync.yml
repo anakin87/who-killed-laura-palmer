@@ -23,7 +23,7 @@ jobs:
       - name: LFS Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git lfs push --force https://anakin87:$HF_TOKEN@huggingface.co/spaces/anakin87/who-killed-laura-palmer main
+        run: git lfs push https://anakin87:$HF_TOKEN@huggingface.co/spaces/anakin87/who-killed-laura-palmer main
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
