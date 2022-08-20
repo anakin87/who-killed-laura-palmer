@@ -35,7 +35,7 @@ def main():
         Built with <a href="https://github.com/deepset-ai/haystack/" target="_blank">Haystack</a><br/>
         <small>Data crawled from <a href="https://twinpeaks.fandom.com/wiki/Twin_Peaks_Wiki" target="_blank">
         Twin Peaks Wiki</a>.</small>
-        <img src="https://visitor-badge.glitch.me/badge?page_id=wklp">
+        <img src="https://visitor-badge.glitch.me/badge?page_id=anakin87.who-killed-laura-palmer" width="50"></img>
         </p><img src="{LAURA_PALMER_IMG_SRC}"/><br/></div>
         """, unsafe_allow_html=True)
     # spotify webplayer
