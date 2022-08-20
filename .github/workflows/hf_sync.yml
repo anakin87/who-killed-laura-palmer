@@ -19,7 +19,9 @@ jobs:
       - name: LFS Track
         run: git lfs track presentations/*.pdf
       - name: Checkout LFS objects
-        run: git lfs checkout          
+        run: git lfs checkout   
+      - name: Checkout LFS objects 2
+        run: git lfs pull           
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
