@@ -20,7 +20,11 @@ jobs:
         run: git lfs track presentations/*.pdf
       - name: Checkout LFS objects
         run: git lfs checkout          
+      - name: LFS Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: git lfs push --force https://anakin87:$HF_TOKEN@huggingface.co/spaces/anakin87/who-killed-laura-palmer main
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --no-verify --force https://anakin87:$HF_TOKEN@huggingface.co/spaces/anakin87/who-killed-laura-palmer main
+        run: git push --force https://anakin87:$HF_TOKEN@huggingface.co/spaces/anakin87/who-killed-laura-palmer main
