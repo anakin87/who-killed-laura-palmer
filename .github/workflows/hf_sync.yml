@@ -13,17 +13,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          lfs: True
-      - name: LFS Install
-        run: git lfs install
-      - name: LFS Track
-        run: git lfs track presentations/*.pdf
-      - name: Checkout LFS objects
-        run: git lfs checkout          
-      - name: LFS Push to hub
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git lfs push https://anakin87:$HF_TOKEN@huggingface.co/spaces/anakin87/who-killed-laura-palmer main
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
