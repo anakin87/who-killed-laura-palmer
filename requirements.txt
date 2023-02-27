@@ -1,4 +1,5 @@
 farm-haystack[faiss]==1.4.0
+faiss-cpu>=1.6.3,<=1.7.2
 markdown
 st-annotated-text
 streamlit==1.2.0
