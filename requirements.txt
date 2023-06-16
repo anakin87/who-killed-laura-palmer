@@ -4,3 +4,4 @@ markdown
 st-annotated-text
 streamlit==1.2.0
 protobuf==3.20.1
+altair<5
