@@ -1,5 +1,20 @@
+# Keep the legacy Haystack/Streamlit stack on compatible versions.
+# Prefer CPU wheels on Linux (Hugging Face Spaces).
+--extra-index-url https://download.pytorch.org/whl/cpu
 farm-haystack[faiss]==1.17.2
-markdown
-st-annotated-text
-#streamlit==1.2.0
-altair<5
+streamlit==1.2.0
+# Haystack 1.17 uses Pydantic v1 and sklearn.ensemble._gb_losses;
+# FAISS 1.7.2 requires the NumPy 1.x ABI.
+pydantic==1.10.26
+numpy==1.26.4
+scikit-learn==1.2.2
+# This Sentence Transformers release still uses cached_download (Hub <0.26).
+sentence-transformers==2.2.2
+huggingface-hub==0.25.2
+# Versions compatible with the Transformers 4.29.1 required by Haystack.
+accelerate==0.20.3
+torch==2.1.2
+torchvision==0.16.2
+markdown==3.10.3
+st-annotated-text==4.0.2
+altair==4.2.2

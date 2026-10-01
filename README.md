@@ -5,6 +5,7 @@ colorFrom: blue
 colorTo: green
 sdk: streamlit
 sdk_version: 1.2.0
+python_version: "3.10"
 app_file: app.py
 pinned: false
 license: apache-2.0
@@ -57,12 +58,21 @@ WKLP is a simple Question Answering system, based on data crawled from [Twin Pea
 Within each folder, you can find more in-depth explanations.
 
 ## Installation 💻
-To install this project locally, follow these steps:
+Use Python 3.10 (matching the Space). The requirements pin compatible versions
+for the legacy Haystack 1.x stack. To install this project locally:
 - `git clone https://github.com/anakin87/who-killed-laura-palmer`
 - `cd who-killed-laura-palmer`
+- `git lfs pull`
+- `python3.10 -m venv .venv`
+- `source .venv/bin/activate`
 - `pip install -r requirements.txt`
 
 To run the web app, simply type: `streamlit run app.py`
+
+Pushes to `main` trigger `.github/workflows/hf_sync.yml`, which synchronizes
+the repository and its Git LFS data to the Hugging Face Space. The GitHub
+Actions secret `HF_TOKEN` must have write access to the Space. Check that
+workflow and then the Space build/runtime logs after deploying.
 
 ## Possible improvements ✨
 ### Project structure
